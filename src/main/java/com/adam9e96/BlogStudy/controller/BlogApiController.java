@@ -3,15 +3,14 @@ package com.adam9e96.BlogStudy.controller;
 import com.adam9e96.BlogStudy.domain.Article;
 import com.adam9e96.BlogStudy.dto.AddArticleRequest;
 import com.adam9e96.BlogStudy.dto.ArticleResponse;
+import com.adam9e96.BlogStudy.dto.UpdateArticleRequest;
 import com.adam9e96.BlogStudy.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,16 +26,9 @@ import java.util.List;
  * <strong>주요 기능:</strong>
  * <ul>
  *   <li>새로운 게시물 추가</li>
- *   <li>게시물 조회, 수정, 삭제 등의 추가적인 API 엔드포인트 확장 가능</li>
- * </ul>
- * </p>
- *
- * <p>
- * <strong>사용된 주요 어노테이션:</strong>
- * <ul>
- *   <li>{@link RestController}: 이 클래스가 RESTful 웹 서비스의 컨트롤러임을 나타냅니다.</li>
- *   <li>{@link RequiredArgsConstructor}: Lombok을 사용하여 final 필드의 생성자를 자동 생성합니다.</li>
- *   <li>{@link Slf4j}: Lombok을 사용하여 로깅 기능을 제공합니다.</li>
+ *   <li>게시물 전체 조회</li>
+ *   <li>게시물 id로 조회</li>
+ *   <li>게시술 id로 삭제</li>
  * </ul>
  * </p>
  *
@@ -55,9 +47,11 @@ public class BlogApiController {
      * 이 서비스는 블로그 게시물과 관련된 비즈니스 로직을 처리합니다.
      * </p>
      */
+    @Autowired
     private final BlogService blogService;
 
     /**
+     * <h2>블로그 글 추가</h2>
      * 새로운 블로그 게시물을 추가하는 API 엔드포인트입니다.
      * <p>
      * 클라이언트로부터 {@link AddArticleRequest} 객체를 JSON 형식으로 전달받아,
@@ -104,9 +98,15 @@ public class BlogApiController {
     }
 
     /**
-     * /api/articles GET 요청이 오면 글 목록을 조회할 findAllArticles()
-     * /api/articles GET 요청이 오면 글 전체를 조회하는 findAll() 메서드를 호출 한 다음
-     * 응답용 객체인 ArticleResponse 로 파싱해 body에 담아 클라이언트에 전송합니다.
+     * <h2>블로그 글 전체 조회</h2>
+     * <p>
+     * <url>http://www.localhost:8080/api/articles</url> 로 GET 요청이 오면 글 목록을 조회합니다.
+     * </p>
+     * <p>
+     * /api/articles 로 GET 요청이 오면 글 목록을 조회할 findAllArticles()를 실행합니다. <br>
+     * 내부족으로는 글 전체를 조회하는 findAll() 메서드를 호출한 다음 <br>
+     * 응답용 객체인 ArticleResponse 타입으로 파싱해 body 에 담아서 클라이언트에 전송합니다.(반환)
+     * </p>
      */
     @GetMapping("/api/articles")
     public ResponseEntity<List<ArticleResponse>> findAllArticles() {
@@ -116,8 +116,40 @@ public class BlogApiController {
                 .toList();
         return ResponseEntity.ok()
                 .body(articles);
-
     }
 
-    // 추가적인 API 엔드포인트가 필요하다면 여기에 정의할 수 있습니다.
+    /**
+     * <h2>
+     * 블로그 글을 id로 조회
+     * </h2>
+     * <p>
+     * /api/articles/{id} 로 GET 요청이 오면 id에 해당되는 블로그 글을 반환합니다.
+     * </p>
+     */
+    @GetMapping("/api/articles/{id}")
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable Long id) {
+        Article article = blogService.findById(id);
+
+        return ResponseEntity.ok().body(new ArticleResponse(article));
+    }
+
+    @DeleteMapping("/api/articles/{id}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
+        blogService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * <h2>
+     * 블로그 글을 id로 수정하기
+     * </h2>
+     */
+    @PutMapping("/api/articles/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable Long id,
+                                                 @RequestBody UpdateArticleRequest request) {
+        Article updateArticle = blogService.update(id, request);
+
+        return ResponseEntity.ok()
+                .body(updateArticle);
+    }
 }

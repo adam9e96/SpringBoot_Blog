@@ -84,6 +84,15 @@ public class Article {
         this.content = content;
     }
 
+    /**
+     * 블로그글 수정을 위한 메서드 : update()
+     * @param title
+     * @param content
+     */
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     //    protected Article() { // 기본 생성자
     //    }
