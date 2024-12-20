@@ -5,6 +5,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <h1>DAO</h1>
@@ -37,6 +43,7 @@ import lombok.NoArgsConstructor;
 @Entity // 엔티티로 지정하여 JPA가 관리하도록 함
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자를 PROTECTED 로 설정
 @Getter
+@EntityListeners(AuditingEntityListener.class) // 블로그 글 뷰 구현 (생성시간, 수정시간 관련)
 public class Article {
 
     /**
@@ -86,6 +93,7 @@ public class Article {
 
     /**
      * 블로그글 수정을 위한 메서드 : update()
+     *
      * @param title
      * @param content
      */
@@ -96,4 +104,12 @@ public class Article {
 
     //    protected Article() { // 기본 생성자
     //    }
+
+    @CreatedDate // 엔티티가 생성될 때 생성 시간 저장
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate // 엔티티가 수정될 때 수정 시간 저장
+    @Column(name = "updated_at")
+    private LocalDateTime updateAt;
 }
