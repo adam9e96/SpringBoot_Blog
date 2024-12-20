@@ -127,14 +127,22 @@ public class BlogApiController {
      * </p>
      */
     @GetMapping("/api/articles/{id}")
-    public ResponseEntity<ArticleResponse> findArticle(@PathVariable Long id) {
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") Long id) {
         Article article = blogService.findById(id);
 
         return ResponseEntity.ok().body(new ArticleResponse(article));
     }
 
+    /**
+     * <h2>
+     * 블로그 글을 id로 삭제
+     * </h2>
+     * <p>
+     * /api/articles/{id} 로 DELETE 요청이 오면 id에 해당되는 블로그 글을 삭제합니다.
+     * </p>
+     */
     @DeleteMapping("/api/articles/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteArticle(@PathVariable("id") Long id) {
         blogService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -145,7 +153,7 @@ public class BlogApiController {
      * </h2>
      */
     @PutMapping("/api/articles/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long id,
+    public ResponseEntity<Article> updateArticle(@PathVariable("id") Long id,
                                                  @RequestBody UpdateArticleRequest request) {
         Article updateArticle = blogService.update(id, request);
 
