@@ -3,7 +3,7 @@ package com.adam9e96.BlogStudy.controller;
 import com.adam9e96.BlogStudy.domain.Article;
 import com.adam9e96.BlogStudy.dto.ArticleListViewResponse;
 import com.adam9e96.BlogStudy.dto.ArticleViewResponse;
-import com.adam9e96.BlogStudy.service.BlogService;
+import com.adam9e96.BlogStudy.service.BlogServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import java.util.List;
 @Controller
 public class BlogViewController {
 
-    private final BlogService blogService;
+    private final BlogServiceImpl blogService;
 
     @GetMapping("/articles")
     public String getArticles(Model model) {

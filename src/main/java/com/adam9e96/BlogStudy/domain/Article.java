@@ -9,16 +9,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * <h1>DAO</h1>
- * {@code Article} 클래스는 블로그 게시물을 나타내는 엔티티입니다.
- * <p>
- * 이 클래스는 JPA를 사용하여 데이터베이스의 {@code articles} 테이블과 매핑됩니다.
- * 각 인스턴스는 하나의 게시물을 나타내며, 게시물의 제목과 내용을 포함합니다.
- * </p>
+ * 블로그 게시물을 나타내는 엔티티입니다.
+ *
+ * <p>이 클래스는 JPA를 사용하여 데이터베이스의 {@code articles} 테이블과 매핑됩니다.
+ * 게시물의 제목과 내용 필드, 생성 및 수정 타임스탬프를 포함합니다.</p>
+ *
  *
  * <p>
  * <strong>주요 기능:</strong>
@@ -31,10 +29,8 @@ import java.time.LocalDateTime;
  *
  * <p>
  * <strong>주의 사항:</strong>
- * <ul>
- *   <li>기본 생성자는 {@link AccessLevel#PROTECTED}로 제한되어 있어, 외부에서 직접 인스턴스를 생성할 수 없습니다.
- *       대신 {@link #builder()} 메서드를 사용하여 객체를 생성해야 합니다.</li>
- * </ul>
+ *       기본 생성자는 PROTECTED 수준으로 제한되어 있어, 외부에서 직접 인스턴스를 생성할 수 없습니다.
+ *       대신 {@link #builder()} 메서드를 사용하여 객체를 생성해야 합니다.
  * </p>
  *
  * @author adam9e96
@@ -77,10 +73,23 @@ public class Article {
 
 
     /**
-     * {@code Article} 클래스의 빌더 패턴을 사용한 생성자입니다.
-     * <p>
-     * 이 생성자는 Lombok의 {@link Builder} 어노테이션에 의해 자동 생성됩니다.
-     * </p>
+     * 게시물이 생성된 타임스탬프입니다.
+     * 엔티티가 저장될 때 자동으로 설정됩니다.
+     */
+    @CreatedDate // 엔티티가 생성될 때 생성 시간 저장
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    /**
+     * 게시물이 마지막으로 수정된 타임스탬프입니다.
+     * 엔티티가 수정될 때 자동으로 업데이트됩니다.
+     */
+    @LastModifiedDate // 엔티티가 수정될 때 수정 시간 저장
+    @Column(name = "updated_at")
+    private LocalDateTime updateAt;
+
+    /**
+     * 빌더 패턴을 사용하여 {@code Article} 인스턴스를 생성합니다.
      *
      * @param title   게시물의 제목
      * @param content 게시물의 내용
@@ -92,24 +101,15 @@ public class Article {
     }
 
     /**
-     * 블로그글 수정을 위한 메서드 : update()
+     * 게시물의 제목과 내용을 업데이트합니다.
      *
-     * @param title
-     * @param content
+     * @param title   새로운 제목
+     * @param content 새로운 내용
      */
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    //    protected Article() { // 기본 생성자
-    //    }
 
-    @CreatedDate // 엔티티가 생성될 때 생성 시간 저장
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate // 엔티티가 수정될 때 수정 시간 저장
-    @Column(name = "updated_at")
-    private LocalDateTime updateAt;
 }

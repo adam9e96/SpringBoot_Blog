@@ -4,7 +4,7 @@ import com.adam9e96.BlogStudy.domain.Article;
 import com.adam9e96.BlogStudy.dto.AddArticleRequest;
 import com.adam9e96.BlogStudy.dto.ArticleResponse;
 import com.adam9e96.BlogStudy.dto.UpdateArticleRequest;
-import com.adam9e96.BlogStudy.service.BlogService;
+import com.adam9e96.BlogStudy.service.BlogServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
  * <h1>Controller</h1>
  * {@code BlogApiController} 클래스는 블로그 게시물과 관련된 RESTful API 엔드포인트를 제공합니다.
  * <p>
- * 이 컨트롤러는 클라이언트로부터의 HTTP 요청을 처리하고, {@link BlogService}를 통해
+ * 이 컨트롤러는 클라이언트로부터의 HTTP 요청을 처리하고, {@link BlogServiceImpl}를 통해
  * 비즈니스 로직을 수행한 후 적절한 HTTP 응답을 반환합니다.
  * </p>
  *
@@ -32,7 +32,7 @@ import java.util.List;
  * </ul>
  * </p>
  *
- * @see BlogService
+ * @see BlogServiceImpl
  * @see Article
  * @see AddArticleRequest
  */
@@ -48,7 +48,7 @@ public class BlogApiController {
      * </p>
      */
     @Autowired
-    private final BlogService blogService;
+    private final BlogServiceImpl blogService;
 
     /**
      * <h2>블로그 글 추가</h2>
