@@ -1,6 +1,6 @@
 package com.adam9e96;
 
-import com.adam9e96.BlogStudy.domain.User;
+import com.adam9e96.BlogStudy.domain.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class ObjectMapperTest {
                 """;
 
         // JSON 문자열을 객체로 역직렬화
-        User userFromString = objectMapper.readValue(json, User.class);
+        Member userFromString = objectMapper.readValue(json, Member.class);
         assertNotNull(userFromString);
         assertEquals("John Doe", userFromString.getName());
         assertEquals(30, userFromString.getAge());
@@ -37,7 +37,7 @@ public class ObjectMapperTest {
         objectMapper.writeValue(file, userFromString);
         assertTrue(file.exists());
 
-        User userFromFile = objectMapper.readValue(file, User.class);
+        Member userFromFile = objectMapper.readValue(file, Member.class);
         assertNotNull(userFromFile);
         assertEquals("John Doe", userFromFile.getName());
         assertEquals(30, userFromFile.getAge());
@@ -51,7 +51,7 @@ public class ObjectMapperTest {
     @DisplayName("Java 객체를 JSON으로 변환하기")
     void objectToJson() throws IOException {
         // Java 객체 생성 (빌더 패턴 사용)
-        User user = User.builder()
+        Member user = Member.builder()
                 .name("Jane Doe")
                 .age(25)
                 .build();
@@ -62,7 +62,7 @@ public class ObjectMapperTest {
         System.out.println("User as JSON: " + userJson);
 
         // JSON 문자열을 다시 객체로 변환하여 일치하는지 확인
-        User userFromJson = objectMapper.readValue(userJson, User.class);
+        Member userFromJson = objectMapper.readValue(userJson, Member.class);
         assertNotNull(userFromJson);
         assertEquals("Jane Doe", userFromJson.getName());
         assertEquals(25, userFromJson.getAge());
