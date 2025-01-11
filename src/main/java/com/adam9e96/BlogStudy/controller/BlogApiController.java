@@ -31,23 +31,12 @@ import java.util.List;
  *   <li>게시술 id로 삭제</li>
  * </ul>
  * </p>
- *
- * @see BlogServiceImpl
- * @see Article
- * @see AddArticleRequest
  */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class BlogApiController {
 
-    /**
-     * {@code BlogService} 인스턴스입니다.
-     * <p>
-     * 이 서비스는 블로그 게시물과 관련된 비즈니스 로직을 처리합니다.
-     * </p>
-     */
-    @Autowired
     private final BlogServiceImpl blogService;
 
     /**

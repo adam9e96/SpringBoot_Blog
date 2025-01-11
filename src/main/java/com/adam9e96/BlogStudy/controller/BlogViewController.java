@@ -38,8 +38,8 @@ public class BlogViewController {
         return "article";
     }
 
-    @GetMapping("/new-article")
     // id 키를 가진 쿼리 파라미터의 값을 id 변수에 매핑(id는 없을 수도 있음)
+    @GetMapping("/new-article")
     public String newArticle(@RequestParam(name = "id", required = false) Long id, Model model) {
         if (id == null) {// id 가 없으면 생성
             model.addAttribute("article", new ArticleViewResponse());
