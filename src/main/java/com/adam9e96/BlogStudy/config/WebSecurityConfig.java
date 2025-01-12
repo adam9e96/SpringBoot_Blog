@@ -2,6 +2,7 @@ package com.adam9e96.BlogStudy.config;
 
 import com.adam9e96.BlogStudy.repository.UserDetailService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
  * - 스프링 시큐리티의 필터 체인 설정
  * - 인증 관리자 및 패스워드 인코더 설정
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -57,16 +59,26 @@ public class WebSecurityConfig {
         return http
                 .authenticationManager(authenticationManager(http, bCryptPasswordEncoder(), userDetailService))
                 .authorizeHttpRequests(auth -> auth // 인증, 인가 설정
-                        .requestMatchers(
+                        .requestMatchers( // /login, /signup, /user 경로는 인증없이 접근가능
                                 new AntPathRequestMatcher("/login"),
                                 new AntPathRequestMatcher("/signup"),
                                 new AntPathRequestMatcher("/user")
                         ).permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated())// 위에서 명시한 경로를 제외한 모든 요청은 인증이 필요하도록 설정(/articles/**도 포함)
                 // formLogin() 메소드를 호출할때 자동으로 UsernamePasswordAuthenticationFilter 가 등록됨)
                 .formLogin(formLogin -> formLogin // 폼 기반 로그인 설정
                         .loginPage("/login")
                         .defaultSuccessUrl("/articles")
+                        .successHandler((request, response, authentication) -> {  // 추가된 부분
+                            log.info("=== 로그인 성공 ===");
+                            log.info("인증 객체: {}", authentication);
+                            log.info("Principal: {}", authentication.getPrincipal());
+                            log.info("Credentials: {}", authentication.getCredentials()); // null 이 찍힘
+                            log.info("Authorities: {}", authentication.getAuthorities());
+                            log.info("Details: {}", authentication.getDetails());
+                            log.info("=================");
+                            response.sendRedirect("/articles");
+                        })
                 )
                 .logout(logout -> logout // 로그아웃 설정
                         .logoutSuccessUrl("/login")

@@ -46,9 +46,15 @@ public class UserDetailService implements UserDetailsService {
                     log.error("사용자를 찾을 수 없음: {}", email);
                     return new IllegalArgumentException(email + "에 해당하는 사용자가 없습니다.");
                 });
-
-        log.info("사용자 정보 조회 완료: {}", email);
-        log.info("저장된 암호화된 비밀번호: {}", userDetails.getPassword());
+        log.info("=== 인증 객체 상세 정보 ===");
+        log.info("Principal (Email): {}", userDetails.getUsername());
+        log.info("Credentials (Password): {}", userDetails.getPassword());
+        log.info("Authorities: {}", userDetails.getAuthorities());
+        log.info("Account Non Expired: {}", userDetails.isAccountNonExpired());
+        log.info("Account Non Locked: {}", userDetails.isAccountNonLocked());
+        log.info("Credentials Non Expired: {}", userDetails.isCredentialsNonExpired());
+        log.info("Enabled: {}", userDetails.isEnabled());
+        log.info(userDetails.toString());
         log.info("=== 사용자 인증 프로세스 종료 ===");
 
         return userDetails;

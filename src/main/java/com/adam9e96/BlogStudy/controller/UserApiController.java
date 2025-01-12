@@ -4,7 +4,9 @@ import com.adam9e96.BlogStudy.dto.AddUserRequest;
 import com.adam9e96.BlogStudy.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * 유저(회원) 관련 API 처리를 담당하는 컨트롤러
  * 회원가입, 로그아웃 등의 기능을 제공.
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class UserApiController {
@@ -28,8 +31,25 @@ public class UserApiController {
      * @return 회원 가입 완료 후 "/login" 페이지로 리다이렉트
      */
     @PostMapping("/user")
-    public String signup(AddUserRequest request) {
+    public String signup(AddUserRequest request, HttpServletRequest httpServletRequest) {
+        // 회원가입 전 세션 확인
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null) {
+            log.info("회원가입 전 세션 존재 - JSESSIONID: {}", session.getId());
+        } else {
+            log.info("회원가입 전 세션 없음");
+        }
+
         userService.save(request); // 회원 가입 메서드 호출
+
+        // 회원가입 후 세션 확인
+        session = httpServletRequest.getSession(false);
+        if (session != null) {
+            log.info("회원가입 후 세션 존재 - JSESSIONID: {}", session.getId());
+        } else {
+            log.info("회원가입 후 세션 없음");
+        }
+
         return "redirect:/login"; // 회원 가입이 완료된 이후에 로그인 페이지로 이동
     }
 
